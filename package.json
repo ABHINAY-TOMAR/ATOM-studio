@@ -42,7 +42,7 @@
     },
     "dependencies": {
         "@vrsen/agentswarm": "1.4.43",
-        "dom-to-pptx": "1.1.5",
+        "dom-to-pptx": "2.1.2",
         "patch-package": "^8.0.1",
         "playwright": "^1.59.1",
         "pptxgenjs": "^3.12.0",
