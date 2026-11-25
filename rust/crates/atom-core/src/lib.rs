@@ -56,6 +56,10 @@ impl ApplicationCore {
     pub fn storage(&self) -> &LocalStorage {
         &self.storage
     }
+
+    pub fn ipc_smoke_response(&self, name: &str) -> String {
+        ipc_smoke_response(name)
+    }
 }
 
 pub fn ipc_smoke_response(name: &str) -> String {
@@ -80,6 +84,10 @@ mod tests {
 
         assert_eq!(core.config().log_level, LogLevel::Debug);
         assert!(core.storage().root().is_dir());
+        assert_eq!(
+            core.ipc_smoke_response("ATOM Studio"),
+            "Hello, ATOM Studio — Rust IPC is working."
+        );
         assert_eq!(
             ipc_smoke_response("ATOM Studio"),
             "Hello, ATOM Studio — Rust IPC is working."

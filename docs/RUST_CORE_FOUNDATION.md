@@ -14,19 +14,19 @@ flowchart TD
   CORE --> LOG[Structured rotating logs]
 ```
 
-`atom-core` does not depend on Tauri. The desktop crate owns Tauri process startup, retains the logging worker for the application lifetime, manages the initialized core as Tauri state, and keeps command handlers thin. The existing `ipc_smoke_test` command and response contract are preserved.
+`atom-core` does not depend on Tauri. The desktop crate owns Tauri process startup, retains the logging worker for the application lifetime, manages the initialized core as Tauri state, and keeps command handlers thin. The `ipc_smoke_test` command resolves that managed core and delegates to its application service; the existing command and response contract are preserved.
 
 ## Modules and ownership
 
-| Module | Responsibility |
-|---|---|
-| `config` | Defaults, TOML parsing, strict unknown-key rejection, and the `ATOM_LOG_LEVEL` override. |
-| `error` | Typed internal core errors and sanitized, serializable IPC error categories. |
-| `logging` | Structured tracing output to a rotating file writer; retains its worker guard for the process lifetime. |
-| `paths` | Platform-aware config, data, logs, cache, and temporary paths; creates directories without deleting existing content. |
-| `storage` | Creates and exposes the application-owned `data/storage` root; no database is selected or initialized. |
-| `ApplicationCore` | Initializes paths, config, and local storage and exposes read-only accessors to application adapters. |
-| Tauri `main.rs` | Process composition root, logging lifecycle, managed core state, and IPC command adapter. |
+| Module            | Responsibility                                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `config`          | Defaults, TOML parsing, strict unknown-key rejection, and the `ATOM_LOG_LEVEL` override.                              |
+| `error`           | Typed internal core errors and sanitized, serializable IPC error categories.                                          |
+| `logging`         | Structured tracing output to a rotating file writer; retains its worker guard for the process lifetime.               |
+| `paths`           | Platform-aware config, data, logs, cache, and temporary paths; creates directories without deleting existing content. |
+| `storage`         | Creates and exposes the application-owned `data/storage` root; no database is selected or initialized.                |
+| `ApplicationCore` | Initializes paths, config, and local storage and exposes read-only accessors to application adapters.                 |
+| Tauri `main.rs`   | Process composition root, logging lifecycle, managed core state, and IPC command adapter.                             |
 
 ## Initialization flow
 

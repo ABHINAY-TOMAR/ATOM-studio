@@ -2,15 +2,22 @@
 
 use std::error::Error;
 
+use tauri::State;
 use tracing::{error, info};
 
 #[tauri::command]
-fn ipc_smoke_test(name: String) -> String {
-    atom_core::ipc_smoke_response(&name)
+fn ipc_smoke_test(name: String, core: State<'_, atom_core::ApplicationCore>) -> String {
+    core.ipc_smoke_response(&name)
 }
 
 fn run() -> Result<(), Box<dyn Error>> {
-    let core = atom_core::ApplicationCore::initialize()?;
+    let core = match atom_core::ApplicationCore::initialize() {
+        Ok(core) => core,
+        Err(error) => {
+            log_initialization_failure(&error);
+            return Err(Box::new(error));
+        }
+    };
     let _logging_guard =
         atom_core::logging::initialize(core.paths().logs_dir(), core.config().log_level)?;
 
@@ -31,6 +38,21 @@ fn run() -> Result<(), Box<dyn Error>> {
 
     result?;
     Ok(())
+}
+
+fn log_initialization_failure(error: &atom_core::error::CoreError) {
+    let Ok(paths) = atom_core::paths::AppPaths::discover() else {
+        return;
+    };
+    if paths.ensure().is_err() {
+        return;
+    }
+
+    if let Ok(_guard) =
+        atom_core::logging::initialize(paths.logs_dir(), atom_core::config::LogLevel::Error)
+    {
+        error!(error = %error, "ATOM Studio initialization failed");
+    }
 }
 
 fn main() {
