@@ -31,7 +31,7 @@ dependencies = [
     # Jupyter / IPython
     "jupyter>=1.0.0",
     "ipython>=8.0.0",
-    "nbformat>=5.0.0",
+    "nbformat>=5.11.1",
     # Image processing
     "pillow>=9.0.0",
     "opencv-python-headless",
