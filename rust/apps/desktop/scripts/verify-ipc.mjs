@@ -205,12 +205,17 @@ try {
     deviceScaleFactor: 1,
     mobile: true,
   });
-  assert.equal(
-    await evaluate(
-      "getComputedStyle(document.querySelector('.sidebar')).width",
-    ),
-    "66px",
+  const responsiveDeadline = Date.now() + 1_000;
+  let sidebarWidth = await evaluate(
+    "getComputedStyle(document.querySelector('.sidebar')).width",
   );
+  while (sidebarWidth !== "66px" && Date.now() < responsiveDeadline) {
+    await delay(25);
+    sidebarWidth = await evaluate(
+      "getComputedStyle(document.querySelector('.sidebar')).width",
+    );
+  }
+  assert.equal(sidebarWidth, "66px");
   await send("Emulation.clearDeviceMetricsOverride");
   await evaluate("document.querySelector('[data-theme-choice=dark]').click()");
   await evaluate(
