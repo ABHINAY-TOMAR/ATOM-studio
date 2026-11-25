@@ -49,7 +49,10 @@ try {
       if (response.ok) {
         const targets = await response.json();
         page = targets.find(
-          (target) => target.type === "page" && target.webSocketDebuggerUrl,
+          (target) =>
+            target.type === "page" &&
+            target.url?.startsWith("http://127.0.0.1:1420/") &&
+            target.webSocketDebuggerUrl,
         );
         if (page) break;
       }
@@ -144,7 +147,6 @@ try {
   await send("Log.enable");
   await send("Page.enable");
   await send("Network.enable");
-  await send("Page.reload", { ignoreCache: true });
   const renderDeadline = Date.now() + 10_000;
   let buttonReady = false;
   while (Date.now() < renderDeadline) {
