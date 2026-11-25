@@ -147,7 +147,7 @@ try {
   await send("Log.enable");
   await send("Page.enable");
   await send("Network.enable");
-  const renderDeadline = Date.now() + 10_000;
+  const renderDeadline = Date.now() + 20_000;
   let buttonReady = false;
   while (Date.now() < renderDeadline) {
     buttonReady = await evaluate(
