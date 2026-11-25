@@ -22,6 +22,36 @@ pub enum CoreError {
     Storage(#[from] StorageError),
 }
 
+impl CoreError {
+    pub fn diagnostic_code(&self) -> &'static str {
+        match self {
+            Self::DirectoryDiscovery => "directory_discovery",
+            Self::DirectoryCreation { .. } => "directory_creation",
+            Self::Configuration(ConfigError::Read { .. }) => "configuration_read",
+            Self::Configuration(ConfigError::Parse(_)) => "configuration_parse",
+            Self::Configuration(ConfigError::InvalidLogLevel) => "configuration_log_level",
+            Self::Configuration(ConfigError::InvalidEnvironmentValue) => {
+                "configuration_environment"
+            }
+            Self::Storage(_) => "local_storage",
+        }
+    }
+
+    pub fn io_error_kind(&self) -> Option<io::ErrorKind> {
+        match self {
+            Self::DirectoryCreation { source, .. } => Some(source.kind()),
+            Self::Configuration(ConfigError::Read { source }) => Some(source.kind()),
+            Self::Storage(StorageError::Initialize { source, .. }) => Some(source.kind()),
+            Self::DirectoryDiscovery
+            | Self::Configuration(
+                ConfigError::Parse(_)
+                | ConfigError::InvalidLogLevel
+                | ConfigError::InvalidEnvironmentValue,
+            ) => None,
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum IpcErrorCode {
@@ -80,6 +110,19 @@ mod tests {
             "ATOM Studio could not prepare its application directories."
         );
         assert!(!response.to_string().contains("private"));
+    }
+
+    #[test]
+    fn internal_diagnostics_keep_failure_context_without_exposing_paths() {
+        let error = CoreError::DirectoryCreation {
+            kind: "configuration",
+            path: PathBuf::from("C:/private/user/config"),
+            source: io::Error::new(io::ErrorKind::PermissionDenied, "denied"),
+        };
+
+        assert_eq!(error.diagnostic_code(), "directory_creation");
+        assert_eq!(error.io_error_kind(), Some(io::ErrorKind::PermissionDenied));
+        assert!(!error.to_string().contains("private"));
     }
 
     #[test]

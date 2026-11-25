@@ -41,17 +41,34 @@ fn run() -> Result<(), Box<dyn Error>> {
 }
 
 fn log_initialization_failure(error: &atom_core::error::CoreError) {
-    let Ok(paths) = atom_core::paths::AppPaths::discover() else {
-        return;
+    let paths = match atom_core::paths::AppPaths::discover() {
+        Ok(paths) => paths,
+        Err(_) => {
+            eprintln!(
+                "ATOM Studio startup diagnostics unavailable ({})",
+                error.diagnostic_code()
+            );
+            return;
+        }
     };
-    if paths.ensure().is_err() {
+    if let Err(path_error) = paths.ensure() {
+        eprintln!(
+            "ATOM Studio startup diagnostics unavailable ({}; {:?})",
+            path_error.diagnostic_code(),
+            path_error.io_error_kind()
+        );
         return;
     }
 
-    if let Ok(_guard) =
-        atom_core::logging::initialize(paths.logs_dir(), atom_core::config::LogLevel::Error)
-    {
-        error!(error = %error, "ATOM Studio initialization failed");
+    match atom_core::logging::initialize(paths.logs_dir(), atom_core::config::LogLevel::Error) {
+        Ok(_guard) => error!(
+            error_code = error.diagnostic_code(),
+            io_error_kind = ?error.io_error_kind(),
+            "ATOM Studio initialization failed"
+        ),
+        Err(logging_error) => {
+            eprintln!("ATOM Studio startup log file unavailable: {logging_error}");
+        }
     }
 }
 

@@ -54,11 +54,11 @@ No credentials or provider settings exist in this milestone. Do not put secrets 
 
 Core operations use `CoreError`, `ConfigError`, `StorageError`, and `LoggingError` rather than panics for ordinary failures. Internal errors preserve their source for diagnosis. `IpcError` serializes stable `code` and `message` fields and intentionally omits paths and underlying OS/parser details. The current smoke command is infallible and continues returning the existing string; the conversion type is tested as the boundary contract for future fallible commands.
 
-Startup errors occur before IPC is available and are returned from the bootstrap path; the desktop entry point reports a concise failure and exits non-zero instead of using `expect`/panic for normal startup failure.
+Startup errors occur before IPC is available and are returned from the bootstrap path. The desktop entry point attempts an error-level file diagnostic with a stable error category and OS error kind when app directories can be prepared. If logging paths are unavailable, it reports only that sanitized context to stderr; it never emits internal paths or configuration contents. It exits non-zero instead of using `expect`/panic for normal startup failure.
 
 ## Logging
 
-The desktop process writes `atom-studio` daily rolling log files under the app-owned logs directory. The appender retains at most seven log files. The configured log level controls the filter. The non-blocking worker guard is kept alive until the Tauri run loop ends. Logs contain lifecycle and diagnostic events only; do not add raw prompts, file contents, credentials, or provider payloads.
+The desktop process writes `atom-studio` daily rolling log files under the app-owned logs directory. The appender retains at most seven app-generated log files; it does not rotate or delete user-created workspace files. The configured log level controls the filter. The non-blocking worker guard is kept alive until the Tauri run loop ends. Logs contain lifecycle and diagnostic events only; do not add raw prompts, file contents, credentials, or provider payloads.
 
 ## Application directories and storage
 
