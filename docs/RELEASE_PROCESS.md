@@ -1,6 +1,6 @@
 # Release process
 
-ATOM Studio has no release artifacts or production support commitment yet. The Tauri bundler is disabled, the Windows GNU build has an unresolved `.rsrc merge failure: multiple non-default manifests` linker warning, and MSVC, installer, signing, and release builds remain unverified. Do not publish an installer or claim platform support until those risks are resolved and tested.
+No ATOM Studio release build has been verified locally, and the Tauri bundler is disabled. Local and remote Git tag lists are empty; GitHub Releases could not be inspected because the current GitHub API session is unauthenticated. The repository contains no production support commitment. The Windows GNU build has an unresolved `.rsrc merge failure: multiple non-default manifests` linker warning, and MSVC, installer, signing, and release builds remain unverified. Do not publish an installer or claim platform support until those risks are resolved and tested.
 
 When a release is authorized:
 

@@ -67,7 +67,7 @@ These documents describe the planned migration; they are not evidence that the p
 
 See the [developer workflow](docs/DEVELOPMENT_WORKFLOW.md), [branch and commit conventions](docs/COMMIT_CONVENTION.md), [repository setup checklist](docs/GITHUB_REPOSITORY_SETUP.md), [release process](docs/RELEASE_PROCESS.md), and [security policy](SECURITY.md). Changes use issues, short-lived branches, pull requests, independent review, and Windows desktop CI.
 
-See [CHANGELOG.md](CHANGELOG.md) for merged project changes. No release has been published.
+See [CHANGELOG.md](CHANGELOG.md) for merged project changes.
 
 ## Known limitations
 
