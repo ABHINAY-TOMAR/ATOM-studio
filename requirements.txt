@@ -19,7 +19,7 @@ plotly>=5.14.0
 
 # Excel/CSV file support
 openpyxl>=3.1.0
-xlrd>=2.0.0
+xlrd>=2.0.2
 
 # Juyter/IPython (for IPythonInterpreter tool)
 jupyter>=1.0.0
