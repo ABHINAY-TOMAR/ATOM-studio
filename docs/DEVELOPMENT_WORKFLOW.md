@@ -34,7 +34,7 @@ cargo clippy --locked --workspace --all-targets -- -D warnings
 cargo build --locked --workspace
 ```
 
-`npm run verify:ipc` launches Vite and a real Tauri/WebView2 window on Windows. It is a local GUI smoke test; GitHub CI runs separate headless Rust and frontend jobs and does not claim to launch the GUI.
+`npm run verify:ipc` launches Vite and a real Tauri/WebView2 window on Windows. It is a local GUI smoke test; the new GitHub workflow is configured for separate headless Rust and frontend jobs and does not claim to launch the GUI. Those GitHub checks remain unverified until the workflow runs.
 
 ## Issue-to-merge lifecycle
 
@@ -60,4 +60,4 @@ No OpenCode Review executable was discoverable in the current development enviro
 
 ## Scope
 
-Current CI targets Windows 2022 because Windows x64 is the verified development target. The workflow performs headless compilation and frontend checks; local WebView2 launch/IPC remains a separate check. No macOS or Linux support claim is made.
+The workflow targets `windows-2022` to exercise the Windows build in GitHub-hosted CI. The local development build was verified on Windows 10 using the GNU toolchain; hosted MSVC results are pending the first workflow run. The workflow performs headless compilation and frontend checks; local WebView2 launch/IPC remains a separate check. No macOS or Linux support claim is made.
