@@ -63,6 +63,12 @@ See [`rust/apps/desktop/README.md`](rust/apps/desktop/README.md) for desktop-spe
 
 These documents describe the planned migration; they are not evidence that the planned capabilities have already been implemented.
 
+## Contributing and repository workflow
+
+See the [developer workflow](docs/DEVELOPMENT_WORKFLOW.md), [branch and commit conventions](docs/COMMIT_CONVENTION.md), [repository setup checklist](docs/GITHUB_REPOSITORY_SETUP.md), [release process](docs/RELEASE_PROCESS.md), and [security policy](SECURITY.md). Changes use issues, short-lived branches, pull requests, independent review, and Windows desktop CI.
+
+See [CHANGELOG.md](CHANGELOG.md) for merged project changes.
+
 ## Known limitations
 
 - The GNU Windows build emits a linker warning: `.rsrc merge failure: multiple non-default manifests`. The local build and IPC verification passed, but the warning remains unresolved and must be addressed before packaging.

@@ -1,20 +1,52 @@
-name: Feature Request
-description: Suggest an idea, feature, or enhancement
-labels: [discussion]
-title: "[FEATURE]:"
-
+name: Feature request
+description: Propose an in-scope improvement to ATOM Studio
+title: "feat: "
+labels: [feature]
 body:
-  - type: checkboxes
-    id: verified
-    attributes:
-      label: Feature hasn't been suggested before.
-      options:
-        - label: I have verified this feature I'm about to request hasn't been suggested before.
-          required: true
-
   - type: textarea
+    id: problem
     attributes:
-      label: Describe the enhancement you want to request
-      description: What do you want to change or add? What are the benefits of implementing this? Try to be detailed so we can understand your request better :)
+      label: Problem
+      description: What user problem or unmet need exists?
     validations:
       required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation and users affected
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and boundaries
+      description: Identify the affected area and what should remain out of scope.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |-
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and risks
+    validations:
+      required: false
