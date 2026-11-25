@@ -2,7 +2,11 @@
 
 ## Goals and constraints
 
-A desktop-first modular monolith that owns orchestration, tools, providers, state and policy. The React/Tauri shell is a client of the engine, not an owner of domain logic. Keep original OpenSwarm as the reference during migration. Avoid empty crates and distributed services.
+A desktop-first modular monolith that will own orchestration, tools, providers, state and policy. The React/Tauri shell is a client of the engine, not an owner of domain logic. Keep original OpenSwarm as the reference during migration. Avoid empty crates and distributed services.
+
+## M3 implementation status
+
+The current implementation is deliberately smaller than the target model below: the workspace contains `atom-core` and the Tauri desktop app. `atom-core` currently provides application initialization, validated configuration, typed errors, platform paths, rotating diagnostics, and an initialized local storage directory. The Tauri adapter owns startup and delegates the existing IPC smoke command through managed core state. Providers, agents, orchestration, tools, event streams, and database persistence are not implemented by M3. See [Rust Core Foundation](RUST_CORE_FOUNDATION.md) for the implemented module and testing details. The component model below is the future architectural direction, not a claim that those components already exist.
 
 ## Proposed component model
 
