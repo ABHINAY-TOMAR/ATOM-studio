@@ -27,7 +27,7 @@ jobs:
       target_commitish: ${{ steps.release.outputs.target_commitish }}
       agentswarm_cli_version: ${{ steps.release.outputs.agentswarm_cli_version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
@@ -112,7 +112,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
@@ -192,7 +192,7 @@ jobs:
       NPM_TAG: ${{ needs.prepare.outputs.npm_tag }}
     steps:
       - name: Checkout release tag
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare.outputs.release_tag }}
 
