@@ -19,7 +19,16 @@ fn run() -> Result<(), Box<dyn Error>> {
         }
     };
     let _logging_guard =
-        atom_core::logging::initialize(core.paths().logs_dir(), core.config().log_level)?;
+        match atom_core::logging::initialize(core.paths().logs_dir(), core.config().log_level) {
+            Ok(guard) => guard,
+            Err(error) => {
+                eprintln!(
+                    "ATOM Studio logging setup failed ({})",
+                    error.diagnostic_code()
+                );
+                return Err(Box::new(error));
+            }
+        };
 
     info!(
         log_level = core.config().log_level.as_str(),

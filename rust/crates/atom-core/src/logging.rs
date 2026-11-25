@@ -16,6 +16,15 @@ pub enum LoggingError {
     Subscriber(#[source] Box<dyn Error + Send + Sync>),
 }
 
+impl LoggingError {
+    pub fn diagnostic_code(&self) -> &'static str {
+        match self {
+            Self::File(_) => "log_file_initialization",
+            Self::Subscriber(_) => "logging_subscriber_initialization",
+        }
+    }
+}
+
 pub fn initialize(log_directory: &Path, level: LogLevel) -> Result<WorkerGuard, LoggingError> {
     let appender = rolling::Builder::new()
         .rotation(rolling::Rotation::DAILY)
@@ -45,9 +54,21 @@ pub fn initialize(log_directory: &Path, level: LogLevel) -> Result<WorkerGuard, 
 
 #[cfg(test)]
 mod tests {
-    use super::{initialize, LogLevel};
+    use super::{initialize, LogLevel, LoggingError};
     use crate::test_support::TestDir;
     use std::fs;
+
+    #[test]
+    fn logging_errors_expose_a_safe_diagnostic_category() {
+        let error = LoggingError::Subscriber(Box::new(std::io::Error::other("private detail")));
+
+        assert_eq!(error.diagnostic_code(), "logging_subscriber_initialization");
+        assert_eq!(
+            error.to_string(),
+            "Application logging has already been initialized."
+        );
+        assert!(!error.to_string().contains("private detail"));
+    }
 
     #[test]
     fn writes_diagnostics_only_to_the_supplied_log_directory() {
