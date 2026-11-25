@@ -45,7 +45,7 @@
         "dom-to-pptx": "1.1.5",
         "patch-package": "^8.0.1",
         "playwright": "^1.59.1",
-        "pptxgenjs": "^3.12.0",
+        "pptxgenjs": "^4.0.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-icons": "^5.0.0",
