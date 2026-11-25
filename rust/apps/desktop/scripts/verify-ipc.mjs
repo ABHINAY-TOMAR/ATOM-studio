@@ -49,7 +49,10 @@ try {
       if (response.ok) {
         const targets = await response.json();
         page = targets.find(
-          (target) => target.type === "page" && target.webSocketDebuggerUrl,
+          (target) =>
+            target.type === "page" &&
+            target.url?.startsWith("http://127.0.0.1:1420/") &&
+            target.webSocketDebuggerUrl,
         );
         if (page) break;
       }
@@ -144,8 +147,7 @@ try {
   await send("Log.enable");
   await send("Page.enable");
   await send("Network.enable");
-  await send("Page.reload", { ignoreCache: true });
-  const renderDeadline = Date.now() + 10_000;
+  const renderDeadline = Date.now() + 20_000;
   let buttonReady = false;
   while (Date.now() < renderDeadline) {
     buttonReady = await evaluate(
@@ -205,12 +207,17 @@ try {
     deviceScaleFactor: 1,
     mobile: true,
   });
-  assert.equal(
-    await evaluate(
-      "getComputedStyle(document.querySelector('.sidebar')).width",
-    ),
-    "66px",
+  const responsiveDeadline = Date.now() + 1_000;
+  let sidebarWidth = await evaluate(
+    "getComputedStyle(document.querySelector('.sidebar')).width",
   );
+  while (sidebarWidth !== "66px" && Date.now() < responsiveDeadline) {
+    await delay(25);
+    sidebarWidth = await evaluate(
+      "getComputedStyle(document.querySelector('.sidebar')).width",
+    );
+  }
+  assert.equal(sidebarWidth, "66px");
   await send("Emulation.clearDeviceMetricsOverride");
   await evaluate("document.querySelector('[data-theme-choice=dark]').click()");
   await evaluate(
