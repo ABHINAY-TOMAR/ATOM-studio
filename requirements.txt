@@ -24,7 +24,7 @@ xlrd>=2.0.0
 # Juyter/IPython (for IPythonInterpreter tool)
 jupyter>=1.0.0
 ipython>=8.0.0
-nbformat>=5.0.0
+nbformat>=5.11.1
 
 # Image processing (for load_images tool)
 pillow>=9.0.0
