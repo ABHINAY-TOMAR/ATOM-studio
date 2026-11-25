@@ -34,19 +34,22 @@ fn run() -> Result<(), Box<dyn Error>> {
         log_level = core.config().log_level.as_str(),
         "ATOM Studio starting"
     );
-    let result = tauri::Builder::default()
+    match tauri::Builder::default()
         .manage(core)
         .invoke_handler(tauri::generate_handler![ipc_smoke_test])
-        .run(tauri::generate_context!());
-
-    if let Err(error) = &result {
-        error!(error = %error, "ATOM Studio exited with an application error");
-    } else {
-        info!("ATOM Studio stopped");
+        .run(tauri::generate_context!())
+    {
+        Ok(()) => {
+            info!("ATOM Studio stopped");
+            Ok(())
+        }
+        Err(_) => {
+            error!(error_code = "tauri_runtime", "ATOM Studio runtime failed");
+            Err(Box::new(std::io::Error::other(
+                "ATOM Studio desktop runtime failed.",
+            )))
+        }
     }
-
-    result?;
-    Ok(())
 }
 
 fn log_initialization_failure(error: &atom_core::error::CoreError) {
