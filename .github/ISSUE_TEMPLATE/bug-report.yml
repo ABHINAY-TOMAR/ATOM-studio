@@ -1,67 +1,70 @@
 name: Bug report
-description: Report an issue that should be fixed
-labels: ["bug"]
+description: Report a reproducible defect in ATOM Studio or its development workflow
+title: "bug: "
+labels: [bug]
 body:
   - type: textarea
     id: description
     attributes:
       label: Description
-      description: Describe the bug you encountered
-      placeholder: What happened?
+      description: What is broken?
     validations:
       required: true
-
-  - type: input
-    id: plugins
-    attributes:
-      label: Plugins
-      description: What plugins are you using?
-    validations:
-      required: false
-
-  - type: input
-    id: openswarm-version
-    attributes:
-      label: OpenSwarm version
-      description: What version of OpenSwarm are you using?
-    validations:
-      required: false
-
   - type: textarea
-    id: reproduce
+    id: reproduction
     attributes:
       label: Steps to reproduce
-      description: How can we reproduce this issue?
-      placeholder: |
-        1.
-        2.
-        3.
+      placeholder: |-
+        1. ...
+        2. ...
+        3. ...
     validations:
-      required: false
-
+      required: true
   - type: textarea
-    id: screenshot-or-link
+    id: expected
     attributes:
-      label: Screenshot and/or share link
-      description: Run `/share` to get a share link, or attach a screenshot
-      placeholder: Paste link or drag and drop screenshot here
+      label: Expected behavior
     validations:
-      required: false
-
-  - type: input
-    id: os
+      required: true
+  - type: textarea
+    id: actual
     attributes:
-      label: Operating System
-      description: what OS are you using?
-      placeholder: e.g., macOS 26.0.1, Ubuntu 22.04, Windows 11
+      label: Actual behavior
     validations:
-      required: false
-
-  - type: input
-    id: terminal
+      required: true
+  - type: dropdown
+    id: severity
     attributes:
-      label: Terminal
-      description: what terminal are you using?
-      placeholder: e.g., iTerm2, Ghostty, Alacritty, Windows Terminal
+      label: Severity
+      options:
+        - Critical — data loss, security exposure, or unusable application
+        - High — major workflow unavailable
+        - Medium — limited functionality impaired
+        - Low — minor issue or workaround available
+    validations:
+      required: true
+  - type: dropdown
+    id: reproducibility
+    attributes:
+      label: Reproducibility
+      options:
+        - Every time
+        - Intermittent
+        - Once
+        - Not yet reproducible
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS/version, app revision, Rust/Cargo, Node/npm, and WebView2 when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs or screenshots
+      description: Remove credentials, personal data, and other sensitive information before posting.
     validations:
       required: false

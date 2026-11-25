@@ -1,0 +1,82 @@
+name: ATOM Studio Desktop CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    name: Rust workspace (headless)
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Rust toolchain and cache dependencies
+        uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1
+        with:
+          toolchain: stable
+          components: clippy, rustfmt
+          cache: true
+          rust-src-dir: rust
+
+      - name: Check formatting
+        working-directory: rust
+        run: cargo fmt --all -- --check
+
+      - name: Check workspace
+        working-directory: rust
+        run: cargo check --locked --workspace
+
+      - name: Test workspace
+        working-directory: rust
+        run: cargo test --locked --workspace
+
+      - name: Run Clippy
+        working-directory: rust
+        run: cargo clippy --locked --workspace --all-targets -- -D warnings
+
+      - name: Build desktop application
+        working-directory: rust
+        run: cargo build --locked --workspace
+
+  frontend:
+    name: Frontend (build and dependency audit)
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: rust/apps/desktop/package-lock.json
+
+      - name: Check desktop version consistency
+        run: node scripts/check-desktop-version.mjs
+
+      - name: Install locked frontend dependencies
+        working-directory: rust/apps/desktop
+        run: npm ci
+
+      - name: Audit frontend dependencies
+        working-directory: rust/apps/desktop
+        run: npm audit --audit-level=high
+
+      - name: Build frontend
+        working-directory: rust/apps/desktop
+        run: npm run build
