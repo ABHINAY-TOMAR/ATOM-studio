@@ -31,7 +31,7 @@ jobs:
         run: node scripts/smoke-openswarm-launcher.js
       - name: Load OpenSwarm product env
         run: node -e "const fs=require('fs');const cp=require('child_process');fs.appendFileSync(process.env.GITHUB_ENV,cp.execFileSync(process.execPath,['scripts/write-product-env.mjs'],{encoding:'utf8'}));"
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Install Python package dependencies
